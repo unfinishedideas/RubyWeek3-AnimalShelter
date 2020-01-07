@@ -5,10 +5,10 @@ class Animal
   def initialize (attributes)
     @id = attributes.fetch(:id)
     @name = attributes.fetch(:name)
-    @breed = attributes.fetch(:breed)
     @type = attributes.fetch(:type)
-    @date_admit = attributes.fetch(:date_admit)
+    @breed = attributes.fetch(:breed)
     @gender = attributes.fetch(:gender)
+    @date_admit = attributes.fetch(:date_admit)
   end
 
   def self.all
@@ -17,15 +17,98 @@ class Animal
     returned_animals.each()do |animal|
     id = animal.fetch("id").to_i
     name = animal.fetch("name")
-    breed = animal.fetch("breed")
     type = animal.fetch("type")
-    date_admit = animal.fetch("date_admit")
+    breed = animal.fetch("breed")
     gender = animal.fetch("gender")
+    date_admit = animal.fetch("date_admit")
     animals.push(Animal.new({:id => id, :name => name, :breed => breed, :type => type, :date_admit => date_admit, :gender => gender}))
   end
   animals
 end
 
+def self.all_by_name
+  returned_animals = DB.exec("SELECT * FROM animals;")
+  animals_array = []
+  returned_animals.each()do |animal|
+  id = animal.fetch("id").to_i
+  name = animal.fetch("name")
+  type = animal.fetch("type")
+  breed = animal.fetch("breed")
+  gender = animal.fetch("gender")
+  date_admit = animal.fetch("date_admit")
+  animals_array.push(Animal.new({:id => id, :name => name, :breed => breed, :type => type, :date_admit => date_admit, :gender => gender}))
+end
+animals_array.sort_by {|animal| animal.name}
+end
 
+def self.all_by_breed
+  returned_animals = DB.exec("SELECT * FROM animals;")
+  animals = []
+  returned_animals.each()do |animal|
+  id = animal.fetch("id").to_i
+  name = animal.fetch("name")
+  type = animal.fetch("type")
+  breed = animal.fetch("breed")
+  gender = animal.fetch("gender")
+  date_admit = animal.fetch("date_admit")
+  animals.push(Animal.new({:id => id, :name => name, :breed => breed, :type => type, :date_admit => date_admit, :gender => gender}))
+end
+animals.sort_by {|animal| animal.breed}
+end
+
+def ==(animal_to_compare)
+  self.name().downcase().eql?(animal_to_compare.name.downcase()) &&
+  self.type.downcase().eql?(animal_to_compare.type.downcase()) &&
+  self.breed.downcase().eql?(animal_to_compare.breed.downcase()) &&
+  self.gender.downcase().eql?(animal_to_compare.gender.downcase()) &&
+  self.date_admit.downcase().eql?(animal_to_compare.date_admit.downcase())
+end
+
+def save
+  result = DB.exec("INSERT INTO animals (name, type, breed, gender, date_admit) VALUES ('#{@name}', '#{@type}', '#{@breed}', '#{@gender}', '#{@date_admit}') RETURNING id;")
+  @id = result.first().fetch("id").to_i
+end
+
+def self.clear
+  DB.exec("DELETE FROM animals *;")
+end
+
+def self.find(id)
+  animal = DB.exec("SELECT * FROM animals WHERE id = #{id};").first
+  id = animal.fetch("id").to_i
+  name = animal.fetch("name")
+  type = animal.fetch("type")
+  breed = animal.fetch("breed")
+  gender = animal.fetch("gender")
+  date_admit = animal.fetch("date_admit")
+  Animal.new({:id => id, :name => name, :breed => breed, :type => type, :date_admit => date_admit, :gender => gender})
+end
+
+def update(attributes)
+  if (attributes.has_key?(:name)) && (attributes.fetch(:name) != nil)
+    @name = attributes.fetch(:name)
+    DB.exec("UPDATE animals SET name = '#{@name}' WHERE id = #{@id};")
+  end
+  if (attributes.has_key?(:type)) && (attributes.fetch(:type) != nil)
+    @type = attributes.fetch(:type)
+    DB.exec("UPDATE animals SET type = '#{@type}' WHERE id = #{@id};")
+  end
+  if (attributes.has_key?(:breed)) && (attributes.fetch(:breed) != nil)
+    @breed = attributes.fetch(:breed)
+    DB.exec("UPDATE animals SET breed = '#{@breed}' WHERE id = #{@id};")
+  end
+  if (attributes.has_key?(:gender)) && (attributes.fetch(:gender) != nil)
+    @gender = attributes.fetch(:gender)
+    DB.exec("UPDATE animals SET gender = '#{@gender}' WHERE id = #{@id};")
+  end
+  if (attributes.has_key?(:date_admit)) && (attributes.fetch(:date_admit) != nil)
+    @date_admit = attributes.fetch(:date_admit)
+    DB.exec("UPDATE animals SET date_admit = '#{@date_admit}' WHERE id = #{@id};")
+  end
+end
+
+def delete
+  DB.exec("DELETE FROM animals WHERE id = #{@id};")
+end
 
 end
