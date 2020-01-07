@@ -10,6 +10,26 @@ describe '#Customer' do
     end
   end
 
+  describe('.all') do
+    it("returns an empty array when there are no customers") do
+      customer = Customer.new({:name => "Jimmy John",  :id => nil, :phone => '555-555-5555', :preference => 'Dogs', :breed => 'Sandwich Dogs'})
+      customer2 = Customer.new({:name => "Jenny Jim",  :id => nil, :phone => '666-666-6666', :preference => 'Cats', :breed => 'Macaroni Cats'})
+      customer.save()
+      customer2.save()
+      expect(Customer.all).to(eq([customer, customer2]))
+    end
+  end
+
+  describe('.all_by_breed') do
+    it("returns an empty array when there are no customers") do
+      customer = Customer.new({:name => "Jimmy John",  :id => nil, :phone => '555-555-5555', :preference => 'Dogs', :breed => 'Sandwich Dogs'})
+      customer2 = Customer.new({:name => "Jenny Jim",  :id => nil, :phone => '666-666-6666', :preference => 'Cats', :breed => 'Macaroni Cats'})
+      customer.save()
+      customer2.save()
+      expect(Customer.all_by_breed).to(eq([customer2, customer]))
+    end
+  end
+
   describe('#save') do
     it("saves a new customer to the database") do
       customer = Customer.new({:name => "Jimmy John",  :id => nil, :phone => '555-555-5555', :preference => 'Dogs', :breed => 'Sandwich Dogs'})

@@ -23,6 +23,10 @@ class Customer
     customers
   end
 
+  def self.all_by_breed
+    self.all.sort_by {|customer| customer.breed}
+  end
+
   def save
     result = DB.exec("INSERT INTO customers (name, phone, preference, breed) VALUES ('#{@name}', '#{@phone}', '#{@preference}', '#{@breed}') RETURNING id;")
     @id = result.first().fetch("id").to_i

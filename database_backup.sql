@@ -43,7 +43,8 @@ CREATE TABLE public.animals (
     breed character varying,
     type character varying,
     date_admit timestamp without time zone,
-    gender character varying
+    gender character varying,
+    owner_id integer
 );
 
 
@@ -111,11 +112,11 @@ ALTER SEQUENCE public.animals_id_seq OWNED BY public.animals.id;
 --
 
 CREATE TABLE public.customers (
-    id integer NOT NULL,
     name character varying,
     preference character varying,
     breed character varying,
-    phone character varying
+    phone character varying,
+    id integer NOT NULL
 );
 
 
@@ -168,7 +169,7 @@ ALTER TABLE ONLY public.customers ALTER COLUMN id SET DEFAULT nextval('public.cu
 -- Data for Name: animals; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY public.animals (id, name, breed, type, date_admit, gender) FROM stdin;
+COPY public.animals (id, name, breed, type, date_admit, gender, owner_id) FROM stdin;
 \.
 
 
@@ -184,7 +185,7 @@ COPY public.animals_customers (id, animal_id, customer_id) FROM stdin;
 -- Data for Name: customers; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY public.customers (id, name, preference, breed, phone) FROM stdin;
+COPY public.customers (name, preference, breed, phone, id) FROM stdin;
 \.
 
 
